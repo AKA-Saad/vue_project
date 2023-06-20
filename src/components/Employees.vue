@@ -3,6 +3,12 @@
         <div class="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
             <div class="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
                 <div class="overflow-hidden shadow ring-1 ring-black ring-opacity-5 sm:rounded-lg">
+                    {{ getEmployeeWithHighestSales }}
+
+
+
+                    <button @click="sortEmployees('asc')">Sort Ascending</button>
+                    <button @click="sortEmployees('desc')">Sort Descending</button>
                     <table class="min-w-full divide-y divide-gray-300">
                         <thead class="bg-gray-50">
                             <tr>
@@ -32,14 +38,14 @@
 </template>
   
 <script>
-import { reactive, onMounted } from 'vue';
+import { reactive, onMounted, computed } from 'vue';
 
 export default {
     name: 'EmployeeList',
     setup() {
         const employees = reactive([]);
 
-    
+
         onMounted(() => {
 
             const yourFetchedData = [
@@ -72,10 +78,41 @@ export default {
                 }
             ];
 
-
-
             employees.push(...yourFetchedData);
         });
+
+
+        const getEmployeeWithHighestSales = computed(() => {
+            let highestSales = 0;
+            let employeeWithHighestSales = null;
+
+            employees.forEach((employee) => {
+                const totalSales = getTotalSales(employee.sales);
+                if (totalSales > highestSales) {
+                    highestSales = totalSales;
+                    employeeWithHighestSales = {
+                        name: employee.name,
+                        email: employee.email
+                    };
+                }
+            });
+
+            return reactive(employeeWithHighestSales);
+        });
+
+        const sortEmployees = (order) => {
+            employees.sort((a, b) => {
+                const salesA = getTotalSales(a.sales);
+                const salesB = getTotalSales(b.sales);
+
+                if (order === 'asc') {
+                    return salesA - salesB;
+                } else {
+                    return salesB - salesA;
+                }
+            });
+        };
+
 
         const getTotalSales = (sales) => {
             // Calculate the total sales for an employee here
@@ -84,7 +121,9 @@ export default {
 
         return {
             employees,
-            getTotalSales
+            getTotalSales,
+            getEmployeeWithHighestSales,
+            sortEmployees
         };
     }
 };
