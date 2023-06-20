@@ -2,13 +2,54 @@
     <div class="mt-8 flow-root">
         <div class="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
             <div class="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
-                <div class="overflow-hidden shadow ring-1 ring-black ring-opacity-5 sm:rounded-lg">
-                    {{ getEmployeeWithHighestSales }}
+
+                {{ getEmployeeWithHighestSales }}
+                
+                <div class="float-right my-4">
+                    <Menu as="div" class="relative inline-block text-left">
+                        <div>
+                            <MenuButton
+                                class="inline-flex w-full justify-center gap-x-1.5 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
+                                Sort
+                                <svg xmlns="http://www.w3.org/2000/svg"
+                                    class="icon inline icon-tabler icon-tabler-arrows-sort ml-4" width="16" height="16"
+                                    viewBox="0 0 24 24" stroke-width="1.5" stroke="#9e9e9e" fill="none"
+                                    stroke-linecap="round" stroke-linejoin="round">
+                                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                    <path d="M3 9l4 -4l4 4m-4 -4v14" />
+                                    <path d="M21 15l-4 4l-4 -4m4 4v-14" />
+                                </svg>
+                            </MenuButton>
+                        </div>
+
+                        <transition enter-active-class="transition ease-out duration-100"
+                            enter-from-class="transform opacity-0 scale-95" enter-to-class="transform opacity-100 scale-100"
+                            leave-active-class="transition ease-in duration-75"
+                            leave-from-class="transform opacity-100 scale-100"
+                            leave-to-class="transform opacity-0 scale-95">
+                            <MenuItems
+                                class="absolute right-0 z-10 mt-2 w-36 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                                <div class="py-1">
+                                    <MenuItem v-slot="{ active }">
+                                    <button
+                                        :class="[active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'block px-4 w-full py-2 text-sm']"
+                                        @click="sortEmployees('asc')">Ascending</button>
+                                    </MenuItem>
+                                    <MenuItem v-slot="{ active }">
+                                    <button
+                                        :class="[active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'block px-4 w-full py-2 text-sm']"
+                                        @click="sortEmployees('desc')">Descending</button>
+
+                                    </MenuItem>
 
 
+                                </div>
+                            </MenuItems>
+                        </transition>
+                    </Menu>
+                </div>
 
-                    <button @click="sortEmployees('asc')">Sort Ascending</button>
-                    <button @click="sortEmployees('desc')">Sort Descending</button>
+                <div class="overflow-hidden w-full shadow ring-1 ring-black ring-opacity-5 sm:rounded-lg">
                     <table class="min-w-full divide-y divide-gray-300">
                         <thead class="bg-gray-50">
                             <tr>
@@ -39,9 +80,18 @@
   
 <script>
 import { reactive, onMounted, computed } from 'vue';
+import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue'
 
 export default {
     name: 'EmployeeList',
+
+    components: {
+        Menu,
+        MenuButton,
+        MenuItem,
+        MenuItems,
+    },
+
     setup() {
         const employees = reactive([]);
 
