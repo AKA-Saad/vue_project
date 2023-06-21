@@ -19,9 +19,10 @@
                                 <img src="https://img.freepik.com/premium-vector/account-icon-user-icon-vector-graphics_292645-552.jpg?w=2000"
                                     alt="" class="h-16 w-16 flex-none rounded-full ring-1 ring-gray-900/10">
                                 <h1>
-                                    <div class="text-sm leading-6 text-gray-500">Invoice </div>
+                                    <div class="text-sm leading-6 text-gray-500">{{
+                                        getEmployeeWithHighestSales[0] }} </div>
                                     <div class="mt-1 text-base font-semibold leading-6 text-gray-900"> {{
-                                        getEmployeeWithHighestSales }}</div>
+                                        getEmployeeWithHighestSales[1] }}</div>
                                 </h1>
                             </div>
                             <div class="flex items-center gap-x-4 sm:gap-x-6">
@@ -163,19 +164,18 @@ export default {
 
         const getEmployeeWithHighestSales = computed(() => {
             let highestSales = 0;
-            let employeeWithHighestSales = null;
+            let employeeWithHighestSales = [];
 
             employees.forEach((employee) => {
                 const totalSales = getTotalSales(employee.sales);
                 if (totalSales > highestSales) {
                     highestSales = totalSales;
-                    employeeWithHighestSales = {
-                        name: employee.name,
-                        email: employee.email
-                    };
+
+                    employeeWithHighestSales.unshift(employee.name);
+                    employeeWithHighestSales.splice(1, 0, employee.email);
+
                 }
             });
-
             return reactive(employeeWithHighestSales);
         });
 
@@ -194,7 +194,6 @@ export default {
 
 
         const getTotalSales = (sales) => {
-            // Calculate the total sales for an employee here
             return sales.reduce((total, sale) => total + sale.order_total, 0);
         };
 
