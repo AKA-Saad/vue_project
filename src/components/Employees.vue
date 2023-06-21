@@ -120,15 +120,15 @@ export default {
         MenuButton,
         MenuItem,
         MenuItems,
+        
     },
 
     setup() {
+        
         const employees = reactive([]);
 
-
         onMounted(() => {
-
-            const yourFetchedData = [
+            const dataset = [
                 {
                     name: 'John',
                     email: 'john3@example.com',
@@ -158,7 +158,7 @@ export default {
                 }
             ];
 
-            employees.push(...yourFetchedData);
+            employees.push(...dataset);
         });
 
 
